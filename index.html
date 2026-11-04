@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>アクセス分析 リデザイン案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5f8;--surface:#fff;--ink:#14263f;--sub:#5d6b80;--line:#e1e6ee;--side:#0f3d73;--side-ink:#cfe0f5;--c1:#2f6fc4;--c2:#f0a03c;--c3:#8a63d2;--c4:#25b0b8;--up:#168a4a;--down:#c43d3d;--hl:#eaf2fd;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1522;--surface:#142235;--ink:#e8eef7;--sub:#93a3b8;--line:#25364d;--side:#091a2e;--side-ink:#9fb7d6;--c1:#5b9bf0;--c2:#f2b25c;--c3:#a98ae6;--c4:#43c6cd;--up:#4cc482;--down:#f07b7b;--hl:#1b3150}}
+:root[data-theme="dark"]{--bg:#0c1522;--surface:#142235;--ink:#e8eef7;--sub:#93a3b8;--line:#25364d;--side:#091a2e;--side-ink:#9fb7d6;--c1:#5b9bf0;--c2:#f2b25c;--c3:#a98ae6;--c4:#43c6cd;--up:#4cc482;--down:#f07b7b;--hl:#1b3150}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 14px/1.6 "Noto Sans JP","Hiragino Sans","Yu Gothic",Meiryo,sans-serif}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+aside{background:var(--side);color:var(--side-ink);padding:20px 12px;position:sticky;top:0;height:100vh}
+aside b{display:block;color:#fff;font-size:15px;padding:0 10px 16px}
+aside a{display:block;padding:9px 10px;border-radius:8px;color:inherit;text-decoration:none;margin-bottom:2px}
+aside a.on{background:rgba(255,255,255,.14);color:#fff;font-weight:700}
+aside .promo{margin-top:20px;padding:12px;border-radius:10px;background:rgba(255,255,255,.08);font-size:12px;line-height:1.5}
+main{padding:24px 32px 48px;max-width:1044px;width:100%}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+h1{font-size:22px;margin:0 0 2px}
+.top p{margin:0;color:var(--sub);font-size:13px}
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{border:0;background:none;color:var(--sub);font:inherit;padding:6px 14px;border-radius:8px;cursor:pointer}
+.seg button.on{background:var(--c1);color:#fff;font-weight:700}
+.tabs{display:flex;gap:4px;margin:20px 0 16px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{border:0;background:none;font:inherit;color:var(--sub);padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tabs button.on{color:var(--c1);border-color:var(--c1);font-weight:700}
+button:focus-visible{outline:2px solid var(--c1);outline-offset:2px}
+.lead{background:var(--hl);border-radius:12px;padding:14px 18px;margin-bottom:16px;font-size:15px}
+.lead b{font-size:17px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;grid-column:span 12;min-width:0}
+.s6{grid-column:span 6}.s4{grid-column:span 4}
+.card h3{margin:0 0 2px;font-size:14px}
+.card .d{margin:0 0 14px;color:var(--sub);font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.kpi small{color:var(--sub);font-size:12px}
+.kpi strong{display:block;font-size:24px;font-weight:700;line-height:1.3;font-variant-numeric:tabular-nums}
+.up{color:var(--up);font-size:12px;font-weight:700}.down{color:var(--down);font-size:12px;font-weight:700}
+.bars{display:flex;align-items:flex-end;gap:.8%;border-bottom:1px solid var(--line)}
+.bars i{flex:1;border-radius:3px 3px 0 0;min-height:2px}
+.bars .stk{flex:1;display:flex;flex-direction:column-reverse;height:100%;justify-content:flex-start}
+.bars .stk i{border-radius:0;flex:none;width:100%}
+.axis{display:flex;gap:.8%;margin-top:4px;color:var(--sub);font-size:11px}
+.axis span{flex:1;min-width:0;text-align:center;white-space:nowrap}
+.leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:12px;color:var(--sub)}
+.leg span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--k);margin-right:6px;vertical-align:-1px}
+.donut{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.ring{width:140px;height:140px;border-radius:50%;flex:none;position:relative}
+.ring::after{content:"";position:absolute;inset:30px;border-radius:50%;background:var(--surface)}
+.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+th{text-align:left;color:var(--sub);font-weight:500;font-size:12px;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th.n,td.n{text-align:right}
+tr:last-child td{border-bottom:0}
+.meter{display:inline-block;height:6px;border-radius:3px;background:var(--c1);vertical-align:middle;margin-right:8px;opacity:.85}
+.note{color:var(--sub);font-size:12px;margin-top:20px}
+@media (max-width:900px){.app{grid-template-columns:1fr}aside{position:static;height:auto;display:flex;gap:4px;overflow-x:auto;padding:10px}aside b,aside .promo{display:none}aside a{white-space:nowrap}main{padding:16px}.kpis{grid-template-columns:repeat(2,1fr)}.s6,.s4{grid-column:span 12}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+<b>管理画面</b>
+<a href="#" onclick="return false">画像編集</a><a href="#" onclick="return false">業務管理</a><a href="#" onclick="return false">写メ日記管理</a><a href="#" onclick="return false">口コミ投稿</a><a href="#" class="on" onclick="return false">アクセス分析</a><a href="#" onclick="return false">詳細設定</a><a href="#" onclick="return false">管理者モード</a>
+<div class="promo">1枚あたりの料金がお得に！<br><b style="padding:0;font-size:13px">画像制作サブスクサービス</b></div>
+</aside>
+<main>
+<div class="top">
+<div><h1>アクセス分析</h1><p>2026年10月1日〜10月31日（1か月）</p></div>
+<div class="seg" id="seg"><button>7日</button><button class="on">1か月</button><button>90日</button><button>期間を指定</button></div>
+</div>
+<div class="tabs" id="tabs"></div>
+<div id="view"></div>
+<p class="note">※ デザイン案です。数値は現行画面のスクリーンショットから読み取った参考値（一部は推定）です。</p>
+</main>
+</div>
+<script>
+const $=s=>document.querySelector(s),fmt=n=>n.toLocaleString('ja-JP');
+const days=[...Array(31)].map((_,i)=>(i+1)+'日');
+const NEW=[290,360,430,410,340,380,430,450,500,400,430,470,420,425,500,410,400,370,435,440,445,390,360,425,420,390,400,430,410,440,420];
+const TOT=[700,800,830,800,760,820,890,900,920,830,890,950,890,890,980,860,870,860,900,910,930,860,850,890,870,860,900,920,890,910,900];
+const SES=TOT.map((v,i)=>Math.round(v*1.08+(i%3)*15));
+const col=['var(--c1)','var(--c2)','var(--c3)','var(--c4)'];
+const dl=(v,u='%')=>v==null?'<span class="sub">–</span>':`<span class="${v>=0?'up':'down'}">${v>=0?'▲':'▼'} ${Math.abs(v)}${u}</span>`;
+function bars(vals,c='var(--c1)',h=170,ev=7){const m=Math.max(...vals)*1.1;return `<div class="bars" style="height:${h}px">${vals.map((v,i)=>`<i style="height:${v/m*100}%;background:${c}" title="${days[i]}：${fmt(v)}"></i>`).join('')}</div><div class="axis">${days.map((d,i)=>`<span>${i%ev?'':d}</span>`).join('')}</div>`}
+function stack(sr,names,h=170,ev=7){const tot=days.map((_,i)=>sr.reduce((a,s)=>a+s[i],0)),m=Math.max(...tot)*1.05;return `<div class="bars" style="height:${h}px">${days.map((_,i)=>`<div class="stk" title="${days[i]}">${sr.map((s,k)=>`<i style="height:${s[i]/m*h}px;background:${col[k]}"></i>`).join('')}</div>`).join('')}</div><div class="axis">${days.map((d,i)=>`<span>${i%ev?'':d}</span>`).join('')}</div>${leg(names)}`}
+function leg(n){return `<div class="leg">${n.map((x,k)=>`<span style="--k:${col[k%4]}">${x}</span>`).join('')}</div>`}
+function donut(items){const cs=['var(--c1)','var(--c2)','var(--c3)','var(--c4)','#b8c2d1'];let a=0;const g=items.map((x,i)=>{const s=a;a+=x[1];return `${cs[i]} ${s}% ${a}%`}).join(',');return `<div class="donut"><div class="ring" style="background:conic-gradient(${g})"></div><div class="leg" style="flex-direction:column;margin:0">${items.map((x,i)=>`<span style="--k:${cs[i]}">${x[0]}　<b style="color:var(--ink)">${x[1]}%</b></span>`).join('')}</div></div>`}
+function card(t,d,body,c=''){return `<section class="card ${c}"><h3>${t}</h3><p class="d">${d}</p>${body}</section>`}
+function table(h,rows){return `<div class="wrap"><table><thead><tr>${h.map((x,i)=>`<th class="${i?'n':''}">${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td class="${i?'n':''}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+function kpi(l,v,d){return `<div class="kpi"><small>${l}</small><strong>${v}</strong>${dl(d)}</div>`}
+const lead=h=>`<div class="lead">${h}</div>`;
+const cityShare=[['大阪',31.5],['（不明）',23.2],['新宿区',6],['その他',39.3]];
+const tabs={
+summary:['サマリー',()=>lead('ユーザー数は <b>13,597人</b>、前の期間より <b>11.2%増えました</b>。滞在時間も伸びています。')+
+`<div class="kpis">${kpi('表示回数',fmt(162658),17.5)}${kpi('セッション数',fmt(32984),13.7)}${kpi('新規ユーザー数',fmt(11494),13.3)}${kpi('ユーザー数',fmt(13597),11.2)}${kpi('平均滞在時間','4分45秒',5.3)}</div><div class="grid">`+
+card('新規ユーザー数の推移','はじめてサイトを訪れた人の数（1日ごと）',bars(NEW,'var(--c1)',200,1))+card('総ユーザー数の推移','サイトを訪れた人の数（1日ごと）',bars(TOT,'var(--c2)',200,1))+'</div>'],
+timeseries:['時系列',()=>lead('1日あたりのユーザーは <b>700〜980人</b>で推移。<b>15日</b> が期間内の最多です。')+'<div class="grid">'+
+card('ユーザー数の推移','1日ごとの訪問者数',bars(TOT),'s6')+card('セッション数の推移','サイトが開かれた回数',bars(SES,'var(--c4)'),'s6')+
+card('流入元別ユーザー数','どこから訪れたか（1日ごと）',stack([TOT.map(v=>Math.round(v*.5)),TOT.map(v=>Math.round(v*.17)),TOT.map(v=>Math.round(v*.23)),TOT.map(v=>Math.round(v*.1))],['検索','直接アクセス','他サイト経由','その他']),'s6')+
+card('操作回数の推移','ページ表示・クリックなど',stack([TOT.map(v=>v*6),TOT.map(v=>v*5),TOT.map(v=>v*3),TOT.map(v=>v*2)],['ページ表示','ユーザー操作','スクロール','その他']),'s6')+'</div>'],
+users:['ユーザー',()=>lead('訪問者の <b>73%がiPhone</b>、<b>65%がリピーター</b>です。夜22時台がもっとも多く見られています。')+'<div class="grid">'+
+card('新規とリピーター','はじめての人／2回目以降の人',donut([['リピーター',64.6],['新規',35.4]]),'s4')+card('地域','市区町村別',donut(cityShare),'s4')+card('端末（OS）','使われている端末',donut([['iOS',73.1],['Android',19.7],['Windows',5],['その他',2.2]]),'s4')+
+card('時間帯別ユーザー数','何時ごろ見られているか（0〜23時）',(()=>{const H=[1300,1000,750,560,500,450,650,850,1000,1150,1250,1280,1450,1400,1430,1450,1400,1380,1420,1400,1400,1500,1600,1560];return `<div class="bars" style="height:170px">${H.map((v,i)=>`<i style="height:${v/1760*100}%;background:var(--c1)" title="${i}時：${fmt(v)}"></i>`).join('')}</div><div class="axis">${H.map((_,i)=>`<span>${i%3?'':i+'時'}</span>`).join('')}</div>`})())+'</div>'],
+acquisition:['集客',()=>lead('もっとも多い流入元は <b>Google検索（5,595人）</b>。直接アクセスは前期比 <b>+27.3%</b> と伸びています。')+'<div class="grid">'+
+card('流入元サイト別','ユーザー数の多い順',table(['流入元','ユーザー数','前期比','エンゲージ率'],[['Google',5595,18.9,'79.9%'],['直接アクセス',3146,27.3,'64.5%'],['osaka.refle.info',1324,-5.0,'83.8%'],['Yahoo!',1199,26.8,'82.4%'],['（不明）',600,null,'71.4%'],['estama.jp',509,1.8,'84.5%'],['osaka.choi-es.com',424,-9.8,'76.8%'],['esthe-ranking.jp',296,0.7,'87.9%'],['men-esthe.jp',234,-11.4,'72.3%']].map(r=>[r[0],fmt(r[1]),dl(r[2]),r[3]])),'s6')+
+card('検索キーワード別','平均掲載順位（数字が小さいほど上位）',table(['キーワード','掲載順位','クリック'],[['大阪 メンズエステ','161',0],['日本橋 メンズエステ','156',0],['難波 メンズエステ','130',0],['堺東 メンズエステ','120',0],['メンズエステ 大阪','101',0],['堺東 マッサージ','90',0],['堺東 エステ','86',0],['メンズエステ堺東','86',0]]),'s6')+'</div>'],
+behavior:['行動',()=>lead('もっとも見られているのは <b>トップページ（34,666回）</b>。次いで <b>出勤情報（33,367回）</b>で、出勤の確認が主な目的と考えられます。')+'<div class="grid">'+
+card('ページ別データ','プロフィールページを除く（表示回数の多い順）',(()=>{const R=[['トップ','/',34666,7.2,10032,'88.7%'],['出勤情報','/schedule',33367,20.7,7048,'91.9%'],['セラピスト一覧','/girl',9158,null,2631,'90.1%'],['出勤情報（明日）','/schedule?day=1',7300,24.6,1918,'94.1%'],['料金システム','/system',6655,10.3,3914,'95.2%'],['セラピスト','/girl',3674,-64.2,1174,'93.4%'],['新人一覧','/newface',2751,13.3,679,'93.6%'],['アクセス','/access',1277,16.7,893,'94.3%'],['イベント','/campaign',1250,22.9,909,'98.5%'],['写メ日記','/diarys',597,20.9,445,'97.1%']];return table(['ページ','表示回数','前期比','ユーザー数','エンゲージ率'],R.map(r=>[`<b>${r[0]}</b> <span style="color:var(--sub);font-size:12px">${r[1]}</span>`,`<span class="meter" style="width:${r[2]/34666*90}px"></span>${fmt(r[2])}`,dl(r[3]),fmt(r[4]),r[5]]))})())+'</div>'],
+therapists:['女の子',()=>lead('いちばん見られているのは <b>篠宮ゆきさん（1,936回）</b>。前期比 <b>+1,583%</b> の急上昇です。')+'<div class="grid">'+
+card('女の子ページ別データ','プロフィールの表示回数（全184件のうち上位10件）',(()=>{const R=[['篠宮ゆき',177,1936,1583.5,950,'93.6%'],['綾瀬りお',94,1738,36.9,1087,'95.7%'],['皐月みゆう',100,1638,33.9,905,'94.4%'],['天海ゆう',186,1474,null,830,'97.8%'],['石原りり',162,1367,74.6,544,'82.7%'],['浜崎あゆ',93,1342,-19.4,939,'96.6%'],['夏目すず',101,1305,-18.8,833,'91.7%'],['真白つばさ',102,1238,-7.1,732,'92.6%'],['帝みりや',188,1058,null,683,'97.6%'],['西山あやの',88,1031,22.6,521,'93.5%']];return table(['名前','表示回数','前期比','ユーザー数','エンゲージ率'],R.map(r=>[`<b>${r[0]}</b> <span style="color:var(--sub);font-size:12px">ID ${r[1]}</span>`,`<span class="meter" style="width:${r[2]/1936*90}px"></span>${fmt(r[2])}`,dl(r[3]),fmt(r[4]),r[5]]))})())+'</div>']
+};
+let cur=location.hash.slice(1);if(!tabs[cur])cur='summary';
+function show(k){cur=k;history.replaceState(null,'','#'+k);$('#tabs').innerHTML=Object.entries(tabs).map(([id,t])=>`<button class="${id==k?'on':''}" onclick="show('${id}')">${t[0]}</button>`).join('');$('#view').innerHTML=tabs[k][1]()}
+$('#seg').addEventListener('click',e=>{if(e.target.tagName=='BUTTON'){[...$('#seg').children].forEach(b=>b.classList.toggle('on',b==e.target))}});
+show(cur);
+</script>
+</body>
+</html>
