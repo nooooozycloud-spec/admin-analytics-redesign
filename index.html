@@ -131,12 +131,33 @@ main:has(.acquisition-grid){max-width:1044px}
 .paid-lock{text-align:center;padding:36px 24px}.paid-lock .paid-label{margin:0}.paid-lock-icon{display:flex;align-items:center;justify-content:center;margin:20px auto 12px;width:60px;height:60px;border-radius:50%;background:var(--hl);color:var(--c1)}.paid-lock-icon svg{width:28px;height:28px}.paid-lock h2{font-size:20px;margin:0 0 12px}.paid-description{color:var(--sub);margin:0;line-height:1.9}.paid-features{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:700px;margin:28px auto}.paid-features>div{border:1px solid var(--line);border-radius:10px;padding:18px 10px}.paid-features b{display:block;font-size:17px;margin-bottom:4px}.paid-features span{font-size:12px;color:var(--sub)}.paid-contract{background:var(--hl);border-radius:10px;max-width:700px;margin:0 auto;padding:16px;color:var(--ink)}.paid-details{max-width:700px;margin:20px auto 0;text-align:left;font-size:12px;color:var(--sub)}.paid-details summary{cursor:pointer}.paid-details p{margin-bottom:0}
 @media(max-width:600px){.paid-features{grid-template-columns:1fr}.paid-lock{padding:28px 18px}.paid-lock h2{font-size:18px}}
 
-aside a.analytics-entry{display:flex;align-items:center;gap:10px;margin-top:16px;padding:16px 12px;border:1px solid #cfe0f5;border-radius:10px;background:#fff;color:#0f3d73;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.08)}
-aside a.analytics-entry:hover{background:#eaf2fd}aside .analytics-entry .entry-arrow{margin-left:auto;font-size:23px;line-height:1}
+aside a.analytics-entry{display:flex;align-items:center;gap:10px;margin-top:16px;padding:8px 12px;border:1px solid rgba(207,224,245,.18);border-radius:8px;background:rgba(255,255,255,.025);color:#e4edf8;font-weight:400;box-shadow:none}
+aside a.analytics-entry:hover{background:rgba(255,255,255,.08)}
+aside .analytics-entry .entry-label{display:flex;flex-direction:column;gap:2px;line-height:1.4}
+aside .analytics-entry .entry-english{font-size:20px;font-weight:400;letter-spacing:.2px}
+aside .analytics-entry .entry-japanese{font-size:11px;color:#b4c8e0}
+aside .analytics-entry>svg{flex:none;opacity:.85}
 @media(max-width:900px){aside a.analytics-entry{margin:0 0 0 8px;padding:9px 12px;flex:none}}
 
 /* プレビュー環境のテーマ設定にかかわらず元の明るい配色を使用 */
 :root,html[data-theme],html[data-theme] body{color-scheme:only light !important;--bg:#f3f5f8 !important;--surface:#fff !important;--ink:#14263f !important;--sub:#5d6b80 !important;--line:#e1e6ee !important;--side:#0f3d73 !important;--side-ink:#cfe0f5 !important;--c1:#2f6fc4 !important;--c2:#f0a03c !important;--c3:#8a63d2 !important;--c4:#25b0b8 !important;--up:#168a4a !important;--down:#c43d3d !important;--hl:#eaf2fd !important;}
+
+/* TEL・LINEタップ数の有料ロック画面 */
+.tap-locked-stage{position:relative;isolation:isolate;overflow:hidden;min-height:450px;border:1px solid var(--line);border-radius:14px;background:#fff;display:flex;justify-content:center;align-items:center;padding:24px}
+.tap-sample{position:absolute;inset:24px;z-index:-3;pointer-events:none;user-select:none}.tap-sample h3{margin:0;font-size:14px}.tap-sample p{font-size:12px;color:var(--sub);margin:4px 0 30px}.tap-sample-bars{display:flex;align-items:flex-end;gap:8px;height:270px;border-bottom:1px solid var(--line);background:repeating-linear-gradient(to top,var(--line) 0,var(--line) 1px,transparent 1px,transparent 25%)}.tap-sample-bars i{flex:1;background:var(--c1);border-radius:3px 3px 0 0}.tap-sample-axis{display:flex;justify-content:space-between;color:var(--sub);font-size:11px;margin-top:8px}
+.tap-frost{position:absolute;inset:0;z-index:-2;background:rgba(243,245,248,.46);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.tap-lock-content{width:min(100%,470px);text-align:center;padding:24px 28px;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px rgba(20,38,63,.06)}.tap-lock-content .paid-lock-icon{margin:14px auto}.tap-lock-content h2{font-size:18px;margin:0 0 12px}.tap-lock-content>p{color:var(--sub);font-size:13px;line-height:1.8;margin:0 0 18px}.tap-contract{background:var(--hl);border-radius:8px;padding:13px;font-size:12px;line-height:1.8}.tap-lock-content .paid-details{margin-top:16px}.tap-sample-note{display:block;font-size:10px;color:var(--sub);margin-top:16px}
+@media(max-width:600px){.tap-locked-stage{padding:16px}.tap-lock-content{padding:22px 16px}.tap-sample-bars{gap:4px}}
+
+/* 有料タップ数タブは控えめに表示 */
+.tabs button.tap-tab-muted{color:#909bab;font-weight:400}
+.tabs button.tap-tab-muted .tab-paid{color:#909bab;background:#edf0f4;font-weight:400}
+.tabs button.tap-tab-muted.on{color:#738196;border-color:#a8b3c2;font-weight:500}
+.tabs button.tap-tab-muted:hover{color:#66758b}
+
+.tabs button:not(.tap-tab-muted){color:#34445b;font-weight:500}
+.tabs button:not(.tap-tab-muted).on{color:var(--c1);font-weight:700}
+.acquisition-grid>.card>.d:empty{display:none}
 </style>
 </head>
 <body>
@@ -145,7 +166,7 @@ aside a.analytics-entry:hover{background:#eaf2fd}aside .analytics-entry .entry-a
 <b>管理画面</b>
 <a href="#" onclick="return false">画像編集</a><a href="#" onclick="return false">業務管理</a><a href="#" onclick="return false">写メ日記管理</a><a href="#" onclick="return false">口コミ投稿</a><a href="#" onclick="return false">詳細設定</a><a href="#" onclick="return false">管理者モード</a>
 <div class="promo">1枚あたりの料金がお得に！<br><b style="padding:0;font-size:13px">画像制作サブスクサービス</b></div>
-<a class="analytics-entry" href="#summary" onclick="show('summary');return false" aria-label="アクセス解析を開く"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 3v17h17M8 16v-5m5 5V7m5 9V4"/></svg><span>アクセス解析</span><span class="entry-arrow" aria-hidden="true">›</span></a>
+<a class="analytics-entry" href="#summary" onclick="show('summary');return false" aria-label="アクセス解析を開く"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 20v-7M12 20V4M18 20V9" stroke-linecap="square"/></svg><span class="entry-label"><span class="entry-english" lang="en">Analytics</span><span class="entry-japanese">アクセス解析</span></span></a>
 </aside>
 <main>
 <div class="top">
@@ -218,7 +239,7 @@ th.setAttribute('aria-sort',descending?'descending':'ascending');button.querySel
 }
 
 const sortableTable=(headers,rows,left=[0])=>table(headers,rows,left).replace(/<th class="([^"]*)">([^<]*)<\/th>/g,(original,cls,label)=>cls!=='n'?original:`<th class="${cls}" aria-sort="none"><button type="button" class="sort-column" onclick="sortAcquisitionColumn(this)" title="${label}を昇順・降順に並べ替え">${label}<span class="sort-direction" aria-hidden="true">↕</span></button></th>`);
-const acquisitionTable=(headers,rows)=>`<div class="rows-preview">${sortableTable(headers,rows.map(row=>row.map(cell=>typeof cell==='string'?cell.replace(/(-?\d+(?:\.\d+)?)%/g,(_,value)=>Number(value).toFixed(2)+'％'):cell)))}</div><button type="button" class="expand-rows" aria-expanded="false" onclick="const box=this.previousElementSibling;const expanded=this.getAttribute('aria-expanded')!=='true';box.classList.toggle('rows-preview',!expanded);this.setAttribute('aria-expanded',String(expanded));this.textContent=expanded?'10件に戻す':'すべて見る（掲載'+box.querySelectorAll('tbody tr').length+'件）';">すべて見る（掲載${rows.length}件）</button>`;
+const acquisitionTable=(headers,rows)=>`<div class="rows-preview">${sortableTable(headers,rows.map(row=>row.map(cell=>typeof cell==='string'?cell.replace(/(-?\d+(?:\.\d+)?)%/g,(_,value)=>Number(value).toFixed(2)+'％'):cell)))}</div><button type="button" class="expand-rows" aria-expanded="false" onclick="const box=this.previousElementSibling;const expanded=this.getAttribute('aria-expanded')!=='true';box.classList.toggle('rows-preview',!expanded);this.setAttribute('aria-expanded',String(expanded));this.textContent=expanded?'閉じる':'すべて見る';">すべて見る</button>`;
 const tabs={
 summary:['サマリー',()=>{const rl=isReal(),f=(c,p,x)=>rl?x:pct(c,p),d=f(A.uniq,P.uniq,11.2),st=A.stay;return ''+
 `<div class="kpis">${kpi('表示回数',fmt(A.viewT),f(A.viewT,P.viewT,17.5))}${kpi('セッション数',fmt(A.sesT),f(A.sesT,P.sesT,13.7))}${kpi('新規ユーザー数',fmt(A.newT),f(A.newT,P.newT,13.3))}${kpi('ユーザー数',fmt(A.uniq),d)}${kpi('サイト平均滞在時間',`${Math.floor(st/60)}分${String(st%60).padStart(2,'0')}秒`,f(A.stay,P.stay,5.3))}</div><div class="grid">`+
@@ -237,8 +258,8 @@ card('時間帯別ユーザー数','アクティブ ユーザー数',bars(H,hl,h
 card('日別の推移','アクティブ ユーザー数',line(A.u,'var(--c1)',440),'s6')+'</div>'},'サイトに訪問したユーザーの属性が確認できるデータです'],
 acquisition:['集客',()=>{const k=A.uniq/13597,dT=pct(A.uniq,P.uniq),S=ACQ.map((r,j)=>[r[0],fmt(sc(r[1],k,j)),dl(dd(r[2],j,dT)),r[3],dl(r[4])]),W=KW.map(r=>[r[0],r[1],dl(null),r[2],dl(r[0]=='メンズエステ堺東'?'10.3…':null),r[3],dl(r[0]=='メンズエステ堺東'?'0…':null)]);
 return '<div class="grid">'+
-'<div class="acquisition-grid">'+card('ユーザーの流入経路別データ','全75件のうち上位22件を掲載（初期表示10件）',acquisitionTable(['流入元サイト','ユーザー数','前期間比（%）','エンゲージメント率','前期間比（%）'],S))+
-card('検索キーワード別データ','全632件のうち上位22件を掲載（初期表示10件・平均掲載順位の順）',acquisitionTable(['検索キーワード','クリック数','前期間比（%）','平均掲載順位','前期間比（%）','検索表示回数','前期間比（%）'],W))+'</div>'+'</div>'},'ユーザーがどのサイトから訪問してきたのか、どんなキーワードで検索して訪問してきたのか分かるデータです'],
+'<div class="acquisition-grid">'+card('ユーザーの流入経路別データ','',acquisitionTable(['流入元サイト','ユーザー数','前期間比（%）','エンゲージメント率','前期間比（%）'],S))+
+card('検索キーワード別データ','',acquisitionTable(['検索キーワード','クリック数','前期間比（%）','平均掲載順位','前期間比（%）','検索表示回数','前期間比（%）'],W))+'</div>'+'</div>'},'ユーザーがどのサイトから訪問してきたのか、どんなキーワードで検索して訪問してきたのか分かるデータです'],
 behavior:['行動',()=>{const vk=A.viewT/162658,uk=A.uniq/13597,dV=pct(A.viewT,P.viewT),V=BEH.map((r,j)=>sc(r[2],vk,j)),mx=Math.max(...V),B=BEH.map((r,j)=>[`<b>${r[0]}</b>`,r[1],meter(V[j],mx),dl(dd(r[3],j,dV)),fmt(sc(r[4],uk,j,1)),dl(dd(r[5],j,dV)),r[6],dl(r[7]),r[8],dl(r[9])]);
 return '<div class="grid">'+
 card('ページ別データ','プロフィールページを除く（全51件のうち上位22件）',sortableTable(['ページ タイトル','URL','表示回数','前期間比（%）','総ユーザー数','前期間比（%）','エンゲージメント率','前期間比（%）','ページ閲覧時間','前期間比（%）'],B,[0,1]))+'</div>'},'サイト内のどのページがどれだけ見られたのかが分かるデータです'],
@@ -247,13 +268,21 @@ return '<div class="grid">'+
 card('女の子ページ別データ','全184件のうち上位22件',sortableTable(['ページ タイトル','URL','表示回数','前期間比（%）','総ユーザー数','前期間比（%）','エンゲージメント率','前期間比（%）'],G,[0,1]))+'</div>'},'登録されている女の子がどれだけ見られたのかが分かるデータです']};
 const jd=(i,y)=>{const d=dt(i);return(y?d.getUTCFullYear()+'年':'')+(d.getUTCMonth()+1)+'月'+d.getUTCDate()+'日'};
 
-tabs.taps=['<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/></svg> タップ数分析 <span class="tab-paid">有料</span>',()=>"<section class=\"card paid-lock\"><span class=\"paid-label\">有料オプション</span><div class=\"paid-lock-icon\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><rect x=\"5\" y=\"10\" width=\"14\" height=\"11\" rx=\"2\"/><path d=\"M8 10V7a4 4 0 0 1 8 0v3\"/><path d=\"M12 14v3\"/></svg></div><h2>タップ数分析は有料オプションです</h2><p class=\"paid-description\">TEL・LINEなど、問い合わせにつながるボタンのタップ数を確認できます。<br>ご契約後に分析データをご覧いただけます。</p><div class=\"paid-features\"><div><b>TEL</b><span>電話ボタンのタップ数</span></div><div><b>LINE</b><span>LINEボタンのタップ数</span></div><div><b>日別の推移</b><span>期間ごとのタップ数の変化</span></div></div><div class=\"paid-contract\">現在このオプションは未契約です。<br>ご利用をご希望の場合は、担当窓口までお問い合わせください。</div><details class=\"paid-details\"><summary>計測内容について</summary><p>ボタンがタップされた回数を集計します。通話の成立・LINEの友だち追加・予約の完了を示すものではありません。</p></details></section>",'TEL・LINEなどのボタンのタップ状況を確認する有料オプションです'];
+
+function lockedTapPage(channel){
+const lock='<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/></svg>';
+const samples=Array.from({length:30},(_,i)=>25+((i*17+(channel==='TEL'?11:23))%65));
+return '<section class="tap-locked-stage" aria-label="'+channel+'タップ数・有料オプション"><div class="tap-sample" aria-hidden="true" inert><h3>'+channel+'タップ数の推移</h3><p>日別のタップ数</p><div class="tap-sample-bars">'+samples.map(value=>'<i style="height:'+value+'%"></i>').join('')+'</div><div class="tap-sample-axis"><span>1日</span><span>10日</span><span>20日</span><span>30日</span></div></div><div class="tap-frost" aria-hidden="true"></div><div class="tap-lock-content"><span class="paid-label">有料オプション</span><div class="paid-lock-icon">'+lock+'</div><h2>'+channel+'タップ数は有料オプションです</h2><p>'+channel+'ボタンがタップされた回数や、<br>日別の推移をご確認いただけます。</p><div class="tap-contract">現在このオプションは未契約です。<br>ご利用をご希望の場合は、担当代理店までお問い合わせください。</div><details class="paid-details"><summary>計測内容について</summary><p>'+ (channel==='TEL'?'電話ボタンのタップ数を集計します。通話の成立や予約の完了を示すものではありません。':'LINEボタンのタップ数を集計します。友だち追加・メッセージ送信・予約の完了を示すものではありません。')+'</p></details><small class="tap-sample-note">背景のグラフは表示イメージです。実際のデータではありません。</small></div></section>';
+}
+tabs.tel=['TELタップ数 <span class="tab-paid">有料</span>',()=>lockedTapPage('TEL'),'電話ボタンのタップ数と日別の推移を確認できます。'];
+tabs.line=['LINEタップ数 <span class="tab-paid">有料</span>',()=>lockedTapPage('LINE'),'LINEボタンのタップ数と日別の推移を確認できます。'];
+
 
 async function toggleAnalyticsFullscreen(){const status=document.querySelector('#fullscreen-status');try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();status.textContent='';}catch(error){status.textContent='この環境では全画面表示を利用できません。';}}
 document.addEventListener('fullscreenchange',()=>{document.querySelector('#analytics-fullscreen').textContent=document.fullscreenElement?'⛶ 全画面を終了':'⛶ 全画面表示';});
 function show(k){if(k)cur=k;const n=R.e-R.s+1;A=agg(R.s,R.e);P=agg(R.s-n,R.s-1);
 $('#per').textContent=jd(R.s,1)+'〜'+jd(R.e,dt(R.s).getUTCFullYear()!=dt(R.e).getUTCFullYear())+'（'+R.tag+'）';
-history.replaceState(null,'','#'+cur);$('#tabs').innerHTML=Object.entries(tabs).map(([id,t])=>`<button class="${id==cur?'on':''}" onclick="show('${id}')">${t[0]}</button>`).join('');$('#view').innerHTML=`<p style="margin:0 0 12px;color:var(--sub)">${tabs[cur][2]}</p>`+tabs[cur][1]()}
+history.replaceState(null,'','#'+cur);$('#tabs').innerHTML=Object.entries(tabs).map(([id,t])=>`<button class="${id==cur?'on':''} ${id==='tel'||id==='line'?'tap-tab-muted':''}" onclick="show('${id}')">${t[0]}</button>`).join('');$('#view').innerHTML=`<p style="margin:0 0 12px;color:var(--sub)">${tabs[cur][2]}</p>`+tabs[cur][1]()}
 const pop=$('#pop'),seg=$('#seg'),ym=i=>{const d=dt(i);return{y:d.getUTCFullYear(),m:d.getUTCMonth()}};
 const setSeg=b=>[...seg.children].forEach(x=>x.classList.toggle('on',x==b));
 const AUTO={'自動期間':0,'今日':[TODAY,TODAY],'昨日':[TODAY-1,TODAY-1],'過去7日間':[TODAY-7,TODAY-1],'過去28日間':[TODAY-28,TODAY-1],'過去30日間':[TODAY-30,TODAY-1],'今月':[idx(2026,11,1),TODAY],'先月':[T0,E3]};
@@ -276,7 +305,7 @@ const tip=document.body.appendChild(Object.assign(document.createElement('div'),
 ['pointermove','pointerdown'].forEach(ev=>document.addEventListener(ev,e=>{const c=e.target.closest&&e.target.closest('.col');if(!c||!c.dataset.tip){tip.hidden=true;return}
 const[d,r]=JSON.parse(decodeURIComponent(c.dataset.tip));tip.innerHTML=`<b class="d" style="font-weight:500">${d}</b>${r.map(x=>`<div><i style="background:${x[0]}"></i><span>${x[1]}</span><strong>${x[2]}</strong></div>`).join('')}`;tip.hidden=false;
 const w=tip.offsetWidth,h=tip.offsetHeight;let x=e.clientX+14,y=e.clientY-h-10;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y<8)y=e.clientY+16;tip.style.left=x+'px';tip.style.top=y+'px'}));
-const h0=location.hash.slice(1);if(tabs[h0])cur=h0;show();
+const h0=location.hash.slice(1)==='taps'?'tel':location.hash.slice(1);if(tabs[h0])cur=h0;show();
 </script>
 </body>
 </html>
