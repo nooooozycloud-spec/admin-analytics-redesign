@@ -116,13 +116,14 @@ main:has(.acquisition-grid){max-width:1544px}
 .sort-direction{margin-left:4px;color:var(--c1)}
 
 /* 棒グラフ共通の縦軸と目盛線 */
-.chart-frame{display:grid;grid-template-columns:52px minmax(0,1fr);column-gap:8px;margin-top:10px}
+.chart-frame{display:grid;grid-template-columns:max-content minmax(0,1fr);column-gap:8px;margin-top:10px}
 .chart-y{position:relative;grid-column:1;grid-row:1;color:var(--sub);font-size:11px;font-variant-numeric:tabular-nums}
+.chart-y::before{content:attr(data-maximum);display:block;visibility:hidden;white-space:nowrap}
 .chart-y span{position:absolute;right:0;transform:translateY(-50%);white-space:nowrap}
 .chart-plot{grid-column:2;grid-row:1;min-width:0;background:repeating-linear-gradient(to top,var(--line) 0,var(--line) 1px,transparent 1px,transparent 25%);border-top:1px solid var(--line)}
 .chart-dates{grid-column:2;min-width:0}
 .chart-frame .col>i,.chart-frame .sk{width:72%;max-width:30px}
-@media(max-width:600px){.chart-frame{grid-template-columns:40px minmax(0,1fr);column-gap:5px}.chart-y{font-size:10px}}
+@media(max-width:600px){.chart-frame{grid-template-columns:max-content minmax(0,1fr);column-gap:5px}.chart-y{font-size:10px}}
 
 .analytics-links{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:10px 18px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
 .analytics-links a{margin:0;color:var(--sub);text-decoration:none}.analytics-links a:hover{text-decoration:underline}.analytics-links button{border:0;background:none;color:var(--sub);font:inherit;cursor:pointer;padding:0}.analytics-links [role="status"]{flex-basis:100%;text-align:right}
@@ -183,9 +184,9 @@ const gp=n=>n>60?'1px':n>31?'2px':'.8%';
 function labs(){const ds=A.ix.map(dt),f=ds[0],l=ds[ds.length-1],same=f.getUTCMonth()==l.getUTCMonth()&&f.getUTCFullYear()==l.getUTCFullYear();return{same,L:ds.map(d=>same?d.getUTCDate()+'日':(d.getUTCMonth()+1)+'/'+d.getUTCDate()),T:ds.map(d=>d.getUTCFullYear()+'/'+(d.getUTCMonth()+1)+'/'+d.getUTCDate())}}
 const tp=(d,r)=>`data-tip="${encodeURIComponent(JSON.stringify([d,r]))}"`;
 
-function chartMaximum(values){const maximum=Math.max(0,...values);if(!maximum)return 4;const raw=maximum/4,power=10**Math.floor(Math.log10(raw));return ([1,2,2.5,5,10].find(step=>step*power>=raw)||10)*power*4;}
-function chartFrame(maximum,height,plot,axis){return `<div class="chart-frame"><div class="chart-y" style="height:${height}px" aria-label="縦軸の目盛り">${Array.from({length:5},(_,i)=>`<span style="top:${i*25}%">${fmt(maximum*(4-i)/4)}</span>`).join('')}</div><div class="chart-plot">${plot}</div><div class="chart-dates">${axis}</div></div>`;}
-function bars(v,L,T,c,h,g,ev,lab,nm){const m=chartMaximum(lab?v.map(value=>value*1.15):v);const plot=`<div class="bars" style="height:${h}px;gap:${g}">${v.map((x,i)=>`<div class="col" ${tp(T[i],[[c,nm,fmt(x)]])}><i style="height:${x/m*100}%;background:${c}">${lab?`<em>${fmt(x)}</em>`:''}</i></div>`).join('')}</div>`;const axis=`<div class="axis" style="gap:${g}">${L.map((x,i)=>`<span>${i%ev?'':x}</span>`).join('')}</div>`;return chartFrame(m,h,plot,axis)}
+function chartMaximum(values){const maximum=Math.max(0,...values);if(!maximum)return 4;const raw=maximum/4,power=10**Math.floor(Math.log10(raw));return ([1,1.25,1.5,2,2.5,3,4,5,6,8,10].find(step=>step*power>=raw)||10)*power*4;}
+function chartFrame(maximum,height,plot,axis){return `<div class="chart-frame"><div class="chart-y" data-maximum="${fmt(maximum)}" style="height:${height}px" aria-label="縦軸の目盛り">${Array.from({length:5},(_,i)=>`<span style="top:${i*25}%">${fmt(maximum*(4-i)/4)}</span>`).join('')}</div><div class="chart-plot">${plot}</div><div class="chart-dates">${axis}</div></div>`;}
+function bars(v,L,T,c,h,g,ev,lab,nm){const m=chartMaximum(lab?v.map(value=>value*1.08):v);const plot=`<div class="bars" style="height:${h}px;gap:${g}">${v.map((x,i)=>`<div class="col" ${tp(T[i],[[c,nm,fmt(x)]])}><i style="height:${x/m*100}%;background:${c}">${lab?`<em>${fmt(x)}</em>`:''}</i></div>`).join('')}</div>`;const axis=`<div class="axis" style="gap:${g}">${L.map((x,i)=>`<span>${i%ev?'':x}</span>`).join('')}</div>`;return chartFrame(m,h,plot,axis)}
 function ts(v,c,W,h=170,nm){const{same,L,T}=labs(),n=A.n;return bars(v,L,T,c,h,gp(n),Math.ceil((same?30:40)*n/W),n<=31&&W>600,nm)}
 function stack(sr,nm,W,h=170){const{same,L,T}=labs(),n=A.n,g=gp(n),ev=Math.ceil((same?30:40)*n/W),tot=A.ix.map((_,i)=>sum(sr.map(s=>s[i]))),m=chartMaximum(tot);const plot= `<div class="bars" style="height:${h}px;gap:${g}">${tot.map((t,i)=>`<div class="col" ${tp(T[i],sr.map((s,k)=>[col[k],nm[k],fmt(s[i])]))}><div class="sk">${sr.map((s,k)=>`<i style="height:${s[i]/m*h}px;background:${col[k]}"></i>`).join('')}</div></div>`).join('')}</div>`;const axis=`<div class="axis" style="gap:${g}">${L.map((x,i)=>`<span>${i%ev?'':x}</span>`).join('')}</div>`;return chartFrame(m,h,plot,axis)+leg(nm)}
 const leg=n=>`<div class="leg">${n.map((x,k)=>`<span style="--k:${col[k%8]}">${x}</span>`).join('')}</div>`;
@@ -219,30 +220,30 @@ th.setAttribute('aria-sort',descending?'descending':'ascending');button.querySel
 const sortableTable=(headers,rows,left=[0])=>table(headers,rows,left).replace(/<th class="([^"]*)">([^<]*)<\/th>/g,(original,cls,label)=>cls!=='n'?original:`<th class="${cls}" aria-sort="none"><button type="button" class="sort-column" onclick="sortAcquisitionColumn(this)" title="${label}を昇順・降順に並べ替え">${label}<span class="sort-direction" aria-hidden="true">↕</span></button></th>`);
 const acquisitionTable=(headers,rows)=>`<div class="rows-preview">${sortableTable(headers,rows.map(row=>row.map(cell=>typeof cell==='string'?cell.replace(/(-?\d+(?:\.\d+)?)%/g,(_,value)=>Number(value).toFixed(2)+'％'):cell)))}</div><button type="button" class="expand-rows" aria-expanded="false" onclick="const box=this.previousElementSibling;const expanded=this.getAttribute('aria-expanded')!=='true';box.classList.toggle('rows-preview',!expanded);this.setAttribute('aria-expanded',String(expanded));this.textContent=expanded?'10件に戻す':'すべて見る（掲載'+box.querySelectorAll('tbody tr').length+'件）';">すべて見る（掲載${rows.length}件）</button>`;
 const tabs={
-summary:['サマリー',()=>{const rl=isReal(),f=(c,p,x)=>rl?x:pct(c,p),d=f(A.uniq,P.uniq,11.2),st=A.stay;return lead(`ユーザー数は <b>${fmt(A.uniq)}人</b>、前の期間より <b>${Math.abs(d)}%${d>=0?'増えました':'減りました'}</b>。`)+
+summary:['サマリー',()=>{const rl=isReal(),f=(c,p,x)=>rl?x:pct(c,p),d=f(A.uniq,P.uniq,11.2),st=A.stay;return ''+
 `<div class="kpis">${kpi('表示回数',fmt(A.viewT),f(A.viewT,P.viewT,17.5))}${kpi('セッション数',fmt(A.sesT),f(A.sesT,P.sesT,13.7))}${kpi('新規ユーザー数',fmt(A.newT),f(A.newT,P.newT,13.3))}${kpi('ユーザー数',fmt(A.uniq),d)}${kpi('サイト平均滞在時間',`${Math.floor(st/60)}分${String(st%60).padStart(2,'0')}秒`,f(A.stay,P.stay,5.3))}</div><div class="grid">`+
 card('新規ユーザー数の推移','はじめてサイトを訪れた人の数',ts(A.nw,'var(--c1)',944,130,'新規ユーザー数'))+card('総ユーザー数の推移','サイトを訪れた人の数',ts(A.u,'var(--c2)',944,130,'総ユーザー数'))+'</div>'},'サイトに訪問したユーザー数やサイト内の概要レポートです'],
-timeseries:['時系列',()=>{const mx=Math.max(...A.u),pk=A.u.indexOf(mx);return lead(`1日あたりのユーザーは <b>${fmt(Math.min(...A.u))}〜${fmt(mx)}人</b>で推移。<b>${labs().T[pk]}</b> が期間内の最多です。`)+'<div class="grid">'+
+timeseries:['時系列',()=>{const mx=Math.max(...A.u),pk=A.u.indexOf(mx);return '<div class="grid">'+
 card('ユーザー数の推移','総ユーザー数',ts(A.u,'var(--c1)',440,170,'総ユーザー数'),'s6')+
 card('流入元別ユーザー数の推移','流入元ごとの1日のユーザー数',stack([.01,.14,.45,.03,.33,.04].map(r=>A.u.map(v=>Math.round(v*r))),['AIアシスタント','直接アクセス','自然検索','自然流入（SNS）','参照元サイト','未分類'],440),'s6')+
 card('セッション数の推移','エンゲージのあったセッション数',ts(A.u.map(v=>Math.round(v*1.05)),'var(--c1)',440,170,'エンゲージのあったセッション数'),'s6')+
 card('キーイベント数の推移','イベントごとの1日の回数',stack([.38,.32,.12,.08,.04,.03,.015,.015].map(r=>A.u.map(v=>Math.round(v*14*r))),['ページ閲覧','ユーザーエンゲージメント','スクロール','セッション開始','初回訪問','クリック','フォーム入力開始','サイト内検索結果の表示'],440),'s6')+'</div>'},'サイトに訪問したユーザー数やサイト内の概要レポートです'],
 users:['ユーザー',()=>{const rt=sh([35.3,64.6,.1],A.n),ct=sh([31.5,23.2,4.5,4,3.5,3.2,2.8,2.5,2.2,22.6],A.n+1),os=sh([73.1,19.7,4.8,1.1,.2,.1,1],A.n+2),K=isReal()?1:A.ut/24480,H=[1300,1000,750,560,500,450,650,850,1000,1150,1250,1280,1450,1400,1430,1450,1400,1380,1420,1400,1400,1500,1600,1560].map(v=>Math.round(v*K)),hl=H.map((_,i)=>i+'時'),pk=H.indexOf(Math.max(...H));
-return lead(`訪問者の <b>${os[0]}%がiOS</b>、<b>${rt[1]}%がリピーター</b>です。<b>${pk}時台</b>がもっとも多く見られています。`)+'<div class="grid">'+
+return '<div class="grid">'+
 card('リピーター別データ','returning＝リピーター、new＝新規',donut([['new',rt[0]],['returning',rt[1]],['(not set)',rt[2]]],['var(--c1)','var(--c2)','var(--c3)']),'s4')+
 card('市区町村別データ','',donut(['Osaka','(not set)','Shinjuku City','Shibuya','Kyoto','Nagoya','Minato City','Kobe','Setagaya City','その他'].map((n,i)=>[n,ct[i]])),'s4')+
 card('OS別データ','',donut(['iOS','Android','Windows','Macintosh','Linux','Chrome OS','(not set)'].map((n,i)=>[n,os[i]]),['var(--c1)','var(--c2)','#a8b83a','var(--c4)','#f4c20d','#e5517f','var(--c3)']),'s4')+
 card('時間帯別ユーザー数','アクティブ ユーザー数',bars(H,hl,hl,'var(--c1)',150,'.8%',2,0,'アクティブ ユーザー数'),'s6')+
 card('日別の推移','アクティブ ユーザー数',line(A.u,'var(--c1)',440),'s6')+'</div>'},'サイトに訪問したユーザーの属性が確認できるデータです'],
 acquisition:['集客',()=>{const k=A.uniq/13597,dT=pct(A.uniq,P.uniq),S=ACQ.map((r,j)=>[r[0],fmt(sc(r[1],k,j)),dl(dd(r[2],j,dT)),r[3],dl(r[4])]),W=KW.map(r=>[r[0],r[1],dl(null),r[2],dl(r[0]=='メンズエステ堺東'?'10.3…':null),r[3],dl(r[0]=='メンズエステ堺東'?'0…':null)]);
-return lead(`もっとも多い流入元は <b>${S[0][0]}（${S[0][1]}人）</b>です。`)+'<div class="grid">'+
+return '<div class="grid">'+
 '<div class="acquisition-grid">'+card('ユーザーの流入経路別データ','全75件のうち上位22件を掲載（初期表示10件）',acquisitionTable(['流入元サイト','ユーザー数','前期間比（%）','エンゲージメント率','前期間比（%）'],S))+
 card('検索キーワード別データ','全632件のうち上位22件を掲載（初期表示10件・平均掲載順位の順）',acquisitionTable(['検索キーワード','クリック数','前期間比（%）','平均掲載順位','前期間比（%）','検索表示回数','前期間比（%）'],W))+'</div>'+'</div>'},'ユーザーがどのサイトから訪問してきたのか、どんなキーワードで検索して訪問してきたのか分かるデータです'],
 behavior:['行動',()=>{const vk=A.viewT/162658,uk=A.uniq/13597,dV=pct(A.viewT,P.viewT),V=BEH.map((r,j)=>sc(r[2],vk,j)),mx=Math.max(...V),B=BEH.map((r,j)=>[`<b>${r[0]}</b>`,r[1],meter(V[j],mx),dl(dd(r[3],j,dV)),fmt(sc(r[4],uk,j,1)),dl(dd(r[5],j,dV)),r[6],dl(r[7]),r[8],dl(r[9])]);
-return lead(`もっとも見られているのは <b>${BEH[0][0]}（${fmt(V[0])}回）</b>。次いで <b>${BEH[1][0]}（${fmt(V[1])}回）</b>です。`)+'<div class="grid">'+
+return '<div class="grid">'+
 card('ページ別データ','プロフィールページを除く（全51件のうち上位22件）',sortableTable(['ページ タイトル','URL','表示回数','前期間比（%）','総ユーザー数','前期間比（%）','エンゲージメント率','前期間比（%）','ページ閲覧時間','前期間比（%）'],B,[0,1]))+'</div>'},'サイト内のどのページがどれだけ見られたのかが分かるデータです'],
 therapists:['女の子',()=>{const vk=A.viewT/162658,uk=A.uniq/13597,dV=pct(A.viewT,P.viewT),V=GIRL.map((r,j)=>sc(r[2],vk,j,5)),mx=Math.max(...V),G=GIRL.map((r,j)=>[`<b>${r[0]}</b> プロフィール | 大…`,`sirenaosaka.com/profile?id=${r[1]}`,meter(V[j],mx),dl(dd(r[3],j,dV)),fmt(sc(r[4],uk,j,6)),dl(dd(r[5],j,dV)),r[6],dl(r[7])]);
-return lead(`いちばん見られているのは <b>${GIRL[0][0]}さん（${fmt(V[0])}回）</b>です。`)+'<div class="grid">'+
+return '<div class="grid">'+
 card('女の子ページ別データ','全184件のうち上位22件',sortableTable(['ページ タイトル','URL','表示回数','前期間比（%）','総ユーザー数','前期間比（%）','エンゲージメント率','前期間比（%）'],G,[0,1]))+'</div>'},'登録されている女の子がどれだけ見られたのかが分かるデータです']};
 const jd=(i,y)=>{const d=dt(i);return(y?d.getUTCFullYear()+'年':'')+(d.getUTCMonth()+1)+'月'+d.getUTCDate()+'日'};
 
