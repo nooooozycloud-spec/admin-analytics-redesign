@@ -158,6 +158,8 @@ aside .analytics-entry>svg{flex:none;opacity:.85}
 .tabs button:not(.tap-tab-muted){color:#34445b;font-weight:500}
 .tabs button:not(.tap-tab-muted).on{color:var(--c1);font-weight:700}
 .acquisition-grid>.card>.d:empty{display:none}
+
+.tap-lock-content>.tap-price{margin:14px 0 20px;color:var(--ink);font-size:14px}.tap-price strong{font-size:26px;font-weight:700;margin-left:6px}
 </style>
 </head>
 <body>
@@ -272,7 +274,7 @@ const jd=(i,y)=>{const d=dt(i);return(y?d.getUTCFullYear()+'年':'')+(d.getUTCMo
 function lockedTapPage(channel){
 const lock='<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/></svg>';
 const samples=Array.from({length:30},(_,i)=>25+((i*17+(channel==='TEL'?11:23))%65));
-return '<section class="tap-locked-stage" aria-label="'+channel+'タップ数・有料オプション"><div class="tap-sample" aria-hidden="true" inert><h3>'+channel+'タップ数の推移</h3><p>日別のタップ数</p><div class="tap-sample-bars">'+samples.map(value=>'<i style="height:'+value+'%"></i>').join('')+'</div><div class="tap-sample-axis"><span>1日</span><span>10日</span><span>20日</span><span>30日</span></div></div><div class="tap-frost" aria-hidden="true"></div><div class="tap-lock-content"><span class="paid-label">有料オプション</span><div class="paid-lock-icon">'+lock+'</div><h2>'+channel+'タップ数は有料オプションです</h2><p>'+channel+'ボタンがタップされた回数や、<br>日別の推移をご確認いただけます。</p><div class="tap-contract">現在このオプションは未契約です。<br>ご利用をご希望の場合は、担当代理店までお問い合わせください。</div><details class="paid-details"><summary>計測内容について</summary><p>'+ (channel==='TEL'?'電話ボタンのタップ数を集計します。通話の成立や予約の完了を示すものではありません。':'LINEボタンのタップ数を集計します。友だち追加・メッセージ送信・予約の完了を示すものではありません。')+'</p></details><small class="tap-sample-note">背景のグラフは表示イメージです。実際のデータではありません。</small></div></section>';
+return '<section class="tap-locked-stage" aria-label="'+channel+'タップ数・有料オプション"><div class="tap-sample" aria-hidden="true" inert><h3>'+channel+'タップ数の推移</h3><p>日別のタップ数</p><div class="tap-sample-bars">'+samples.map(value=>'<i style="height:'+value+'%"></i>').join('')+'</div><div class="tap-sample-axis"><span>1日</span><span>10日</span><span>20日</span><span>30日</span></div></div><div class="tap-frost" aria-hidden="true"></div><div class="tap-lock-content"><span class="paid-label">有料オプション</span><div class="paid-lock-icon">'+lock+'</div><h2>'+channel+'タップ数は有料オプションです</h2><p class="tap-price">料金 <strong>5,500円</strong></p><div class="tap-contract">現在このオプションは未契約です。<br>ご利用をご希望の場合は、担当代理店までお問い合わせください。</div><details class="paid-details"><summary>計測内容について</summary><p>'+ (channel==='TEL'?'電話ボタンのタップ数を集計します。通話の成立や予約の完了を示すものではありません。':'LINEボタンのタップ数を集計します。友だち追加・メッセージ送信・予約の完了を示すものではありません。')+'</p></details><small class="tap-sample-note">背景のグラフは表示イメージです。実際のデータではありません。</small></div></section>';
 }
 tabs.tel=['TELタップ数 <span class="tab-paid">有料</span>',()=>lockedTapPage('TEL'),'電話ボタンのタップ数と日別の推移を確認できます。'];
 tabs.line=['LINEタップ数 <span class="tab-paid">有料</span>',()=>lockedTapPage('LINE'),'LINEボタンのタップ数と日別の推移を確認できます。'];
