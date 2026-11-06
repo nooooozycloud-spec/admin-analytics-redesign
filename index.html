@@ -150,13 +150,14 @@ aside .analytics-entry>svg{flex:none;opacity:.85}
 @media(max-width:600px){.tap-locked-stage{padding:16px}.tap-lock-content{padding:22px 16px}.tap-sample-bars{gap:4px}}
 
 /* 有料タップ数タブは控えめに表示 */
-.tabs button.tap-tab-muted{color:#909bab;font-weight:400}
+.tabs button.tap-tab-muted{color:#bdcadd;font-weight:400}
 .tabs button.tap-tab-muted .tab-paid{color:#909bab;background:#edf0f4;font-weight:400}
-.tabs button.tap-tab-muted.on{color:#738196;border-color:#a8b3c2;font-weight:500}
-.tabs button.tap-tab-muted:hover{color:#66758b}
+.tabs button.tap-tab-muted.on{color:#9bb2d5;border-bottom-color:transparent;font-weight:400}
 
-.tabs button:not(.tap-tab-muted){color:#34445b;font-weight:500}
-.tabs button:not(.tap-tab-muted).on{color:var(--c1);font-weight:700}
+.tabs button:not(.tap-tab-muted){position:relative;color:#34445b;font-weight:500;border-bottom-color:transparent}
+.tabs button:not(.tap-tab-muted)::after{content:"";position:absolute;left:0;right:-4px;bottom:-3px;height:1px;background:#65a3f5}
+.tabs button:not(.tap-tab-muted):has(+.tap-tab-muted)::after{right:0}
+.tabs button:not(.tap-tab-muted).on{color:var(--c1);font-weight:700;border-bottom-color:var(--c1)}
 .acquisition-grid>.card>.d:empty{display:none}
 
 .tap-lock-content>.tap-price{margin:14px 0 20px;color:var(--ink);font-size:14px}.tap-price strong{font-size:26px;font-weight:700;margin-left:6px}
